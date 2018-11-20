@@ -16,8 +16,8 @@ class white:
         self.connections = []
         self.possibility = []
 
-# subj = sys.argv[1]
-subj = 100206
+subj = sys.argv[1]
+# subj = 100206
 toWhite={}
 toGrey={}
 whitematter=[]
@@ -142,9 +142,6 @@ def er(X,from_A=False,save_er=False):
             hf.create_dataset("er", data=er_mat)
     return er_mat
 
-def smooth_logistic(x):
-    return x/(1+np.abs(x))
-
 def test_er(test_load=False):
     # series
     G = nx.Graph()
@@ -195,13 +192,9 @@ def test_er(test_load=False):
 binned_toGrey, binned_toWhite = build_binned_gm2wm(scale=33)
 trans_mat = build_binned_wm()[:-1,:-1]
 A = (trans_mat+trans_mat.T)/2
-# np.fill_diagonal(A,0) # ignore self loop
 wm_er = er(A,from_A=True)
 # use 1/ER as edge strength
-# strength_wm = np.zeros(wm_er.shape)
-# strength_wm[np.where(wm_er!=0)] = 1/wm_er[np.where(wm_er!=0)]
 strength_wm = np.divide(1,wm_er)
-# strength_wm = np.round(strength_wm,5)
 '''
 1/ER_gm = sum(1/ER_wm) for all wm paths connecting gm pairs,
 thus strength_gm = 1/ER_gm = sum(strength_wm)
@@ -214,12 +207,9 @@ for gm_i in range(len(Grey33)):
         for i_wm in i_toWhite:
             for j_wm in j_toWhite:
                 strength_gm[gm_i,gm_j] += strength_wm[i_wm,j_wm]
-
-import ipdb; ipdb.set_trace()
-# normalization (????)
-'''current method: first take log, then use x/(1+|x|) and scale&shift to 0-1 
-i.e. log(x)/(2*(1+|log(x)|)) + 1/2'''
-'''2/(1+e^(-x^0.2))-1'''
+# normalization
+'''current normalization method: 2/(1+e^(-x^0.2))-1'''
 normalized_strength = 2/(1+np.exp(-np.power(strength_gm,0.2)))-1
 with h5py.File('er_structural/'+str(subj)+'.h5', 'w') as hf:
     hf.create_dataset("S", data=normalized_strength)
+print('subject '+str(subj)+'finshed.')
