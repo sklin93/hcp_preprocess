@@ -101,7 +101,6 @@ def build_binned_wm(binsize=8):
 
 def build_wm_graph():
     trans_mat = build_binned_wm()
-    import ipdb; ipdb.set_trace()
     tmp = trans_mat[:-1,:-1]
     tmp_A = (tmp+tmp.T)/2
     print(tmp_A)
@@ -111,16 +110,7 @@ def build_wm_graph():
         for blk_j in range(len(trans_mat)-1):
             if trans_mat[blk_i,blk_j]!=0 or trans_mat[blk_j,blk_i]!=0:
                 G.add_edge(blk_i,blk_j,
-                    weight=(trans_mat[blk_i,blk_j],trans_mat[blk_j,blk_i])/2)
-        # for connection_i in range(len(whitematter[wm_idx].connections)):
-        #     if whitematter[wm_idx].connections[connection_i] == -1:
-        #         # node len(wm) is the STOP node
-        #         G.add_edge(whitematter[wm_idx].index,len(G.nodes()),
-        #                 weight=whitematter[wm_idx].possibility[connection_i])
-        #     else:
-        #         # node (0-len(wm)-1) are the wm nodes
-        #         G.add_edge(whitematter[wm_idx].index,whitematter[wm_idx].connections[connection_i],
-        #                 weight=whitematter[wm_idx].possibility[connection_i])
+                    weight=(trans_mat[blk_i,blk_j]+trans_mat[blk_j,blk_i])/2)
     return G
 
 def er(G):
