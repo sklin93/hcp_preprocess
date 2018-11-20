@@ -33,7 +33,7 @@ with open("grey_connections","r") as f:
             neighbours.append(number)
         toWhite[index]=neighbours
         line=f.readline()
-with open("./WC_male/"+str(subj)+".txt","r") as f:
+with open("./WC_female/"+str(subj)+".txt","r") as f:
     line=f.readline()
     while (line!=""):
         line=line.split()
@@ -213,3 +213,10 @@ normalized_strength = 2/(1+np.exp(-np.power(strength_gm,0.2)))-1
 with h5py.File('er_structural/'+str(subj)+'.h5', 'w') as hf:
     hf.create_dataset("S", data=normalized_strength)
 print('subject '+str(subj)+'finshed.')
+
+# vis
+# import matplotlib
+# matplotlib.use('TkAgg')
+# import matplotlib.pyplot as plt
+# plt.imshow(normalized_strength)
+# plt.show()
